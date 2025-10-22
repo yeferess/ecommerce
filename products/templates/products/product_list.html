@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Productos | Mi Ecommerce{% endblock %}
+
+{% block content %}
+<h2 class="mb-6 text-3xl font-bold text-center">Nuestros Productos</h2>
+
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    {% for product in products %}
+        <div class="overflow-hidden transition bg-white rounded-lg shadow-md hover:shadow-xl">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="object-cover w-full h-48">
+            {% else %}
+                <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" class="object-cover w-full h-48">
+            {% endif %}
+            
+            <div class="p-4">
+                <h3 class="mb-2 text-lg font-semibold">{{ product.name }}</h3>
+                <p class="mb-2 text-gray-700">${{ product.price }}</p>
+                <a href="{% url 'products:product_detail' product.pk %}" class="px-4 py-2 text-white rounded bg-primary hover:bg-blue-700">Ver más</a>                
+            </div>
+            <form action="{% url 'cart_add' product.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="px-4 py-2 text-white rounded bg-primary hover:bg-blue-700">
+                        🛒 Agregar
+                    </button>
+                </form>
+        </div>
+    {% empty %}
+        <p class="text-center text-gray-500 col-span-full">No hay productos disponibles.</p>
+    {% endfor %}
+    
+</div>
+{% endblock %}

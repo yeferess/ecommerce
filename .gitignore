@@ -1,0 +1,34 @@
+.venv/\n__pycache__/\ndb.sqlite3\n.env\nmedia/\nstaticfiles/
+
+
+# Entorno virtual
+venv/
+env/
+*.pyc
+__pycache__/
+*.log
+
+# Archivos sensibles
+*.env
+.env
+*.ini
+*.secret
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Configuración del editor
+.vscode/
+.idea/
+
+# Archivos temporales y de caché
+*.bak
+*.tmp
+
+# Archivos estáticos compilados
+staticfiles/
+media/
+
+# Configuración específica del entorno
+*.config

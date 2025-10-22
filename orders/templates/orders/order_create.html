@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Confirmar pedido{% endblock %}
+
+{% block content %}
+<div class="container p-6 mx-auto mt-10 bg-white rounded-lg shadow">
+    <h1 class="mb-4 text-2xl font-bold">Resumen de tu pedido</h1>
+
+    {% if error %}
+        <p class="text-red-500">{{ error }}</p>
+    {% endif %}
+
+    {% if cart %}
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="p-2 text-left">Producto</th>
+                    <th class="p-2 text-center">Cantidad</th>
+                    <th class="p-2 text-right">Precio</th>
+                    <th class="p-2 text-right">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                    <tr class="border-b">
+                        <td class="p-2">{{ item.product.name }}</td>
+                        <td class="p-2 text-center">{{ item.quantity }}</td>
+                        <td class="p-2 text-right">${{ item.price }}</td>
+                        <td class="p-2 text-right">${{ item.total_price }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="mt-6 text-right">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
+                    Confirmar Pedido
+                </button>
+            </form>
+        </div>
+    {% else %}
+        <p>Tu carrito está vacío.</p>
+    {% endif %}
+</div>
+{% endblock %}

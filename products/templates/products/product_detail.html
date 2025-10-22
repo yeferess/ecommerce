@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | Mi Ecommerce{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-lg">
+     {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="object-cover w-full h-48">
+    {% else %}
+        <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" class="object-cover w-full h-48">
+    {% endif %}
+    
+    <div class="p-6">
+        <h2 class="mb-4 text-3xl font-bold">{{ product.name }}</h2>
+        <p class="mb-4 text-gray-700">{{ product.description }}</p>
+        <p class="mb-4 text-2xl font-semibold">${{ product.price }}</p>
+        <p class="mb-4 text-sm text-gray-500">Stock: {{ product.stock }}</p>
+        <a href="{% url 'cart_add' product.id %}" class="inline-block px-6 py-2 text-white bg-green-600 rounded hover:bg-green-700">
+            Agregar al carrito 🛒
+        </a>
+
+        
+        <a href="{% url 'products:product_list' %}" class="inline-block px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Volver</a>
+    </div>
+</div>
+{% endblock %}

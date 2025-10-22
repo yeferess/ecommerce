@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Pedido creado{% endblock %}
+
+{% block content %}
+<div class="container p-6 mx-auto mt-10 text-center bg-white rounded-lg shadow">
+    <h1 class="mb-4 text-2xl font-bold text-green-600">¡Tu pedido ha sido creado!</h1>
+
+    <p>Gracias por tu compra, <strong>{{ order.user.username }}</strong>.</p>
+    <p class="mt-2">Número de orden: <strong>#{{ order.id }}</strong></p>
+    <p>Fecha: {{ order.date_order|date:"d/m/Y H:i" }}</p>
+    <p class="mt-4">Total: <strong>${{ order.total }}</strong></p>
+
+    <a href="{% url 'products:product_list' %}" class="inline-block px-4 py-2 mt-6 text-white bg-blue-600 rounded hover:bg-blue-700">
+        Seguir comprando
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} | Mi Ecommerce{% endblock %}
+
+{% block content %}
+  <h2 class="mb-4 text-2xl font-bold">Productos de {{ category.name }}</h2>
+
+  <div class="grid grid-cols-3 gap-4">
+    {% for product in products %}
+      <div class="p-4 bg-white rounded shadow">
+        <h3 class="text-lg font-semibold">{{ product.name }}</h3>
+        <p>${{ product.price }}</p>
+      </div>
+    {% empty %}
+      <p>No hay productos en esta categoría.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

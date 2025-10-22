@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Inicio | Mi Ecommerce{% endblock %}
+
+{% block content %}
+<section class="text-center">
+    <h2 class="mb-4 text-3xl font-bold">Bienvenido a Mi Ecommerce</h2>
+    <p class="mb-6 text-gray-600">Explora nuestros productos y encuentra lo que necesitas.</p>
+    <a href="{% url 'products:product_list' %}" class="px-6 py-3 text-white transition rounded-lg bg-primary hover:bg-blue-700">Ver productos</a>
+</section>
+{% endblock %}

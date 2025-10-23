@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required #muestra solo a usuari
 from .models import Order, OrderItem
 from cart.cart import Cart
 
-@login_required # solo usuarios logeados acceden a esta vista
+@login_required # solo usuarios logeados 
 def create_order(request):
     cart = Cart(request)
 
@@ -24,3 +24,9 @@ def create_order(request):
         return render(request, 'orders/order_created.html', {'order': order})
     
     return render(request, 'orders/order_create.html', {'cart': cart}) # Si no es POST, muestra el carrito de comproas
+
+@login_required
+def profile_orders(request):
+    
+    orders = Order.objects.filter(user=request.user).order_by('-date_order')#Historial de órdenes del usuario actual
+    return render(request, 'orders/order_user.html', {'orders': orders})

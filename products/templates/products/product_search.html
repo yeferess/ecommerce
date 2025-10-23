@@ -8,25 +8,26 @@
 
 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
     {% for product in products %}
-        <div class="flex flex-col overflow-hidden transition bg-white rounded-lg shadow-md hover:shadow-lg">           
+        <div class="flex flex-col overflow-hidden transition bg-white rounded-lg shadow-md hover:shadow-lg">
             
+            <!-- Imagen del producto -->
             {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="object-cover w-full h-48">
             {% else %}
                 <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" class="object-cover w-full h-48">
             {% endif %}
             
-          
+            <!-- Contenido -->
             <div class="flex flex-col justify-between flex-1 p-4">
                 <div>
                     <h3 class="mb-1 text-lg font-semibold text-gray-800">{{ product.name }}</h3>
                     <p class="mb-3 text-gray-700">${{ product.price }}</p>
                 </div>
 
-                
+                <!-- Botones -->
                 <div class="flex items-center justify-between mt-auto space-x-2">
                     <a href="{% url 'products:product_detail' product.pk %}" 
-                       class="flex-1 px-4 py-2 text-center text-white transition bg-red-600 rounded hover:bg-red-700">
+                       class="flex-1 px-4 py-2 text-center text-white transition bg-blue-600 rounded hover:bg-blue-700">
                         Ver más
                     </a>
 

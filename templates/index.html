@@ -1,10 +1,92 @@
-{% extends "base.html" %}
-{% block title %}Inicio | Mi Ecommerce{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Inicio | ElectroAndes{% endblock %}
 
 {% block content %}
-<section class="text-center">
-    <h2 class="mb-4 text-3xl font-bold">Bienvenido a Mi Ecommerce</h2>
-    <p class="mb-6 text-gray-600">Explora nuestros productos y encuentra lo que necesitas.</p>
-    <a href="{% url 'products:product_list' %}" class="px-6 py-3 text-white transition rounded-lg bg-primary hover:bg-blue-700">Ver productos</a>
+
+{% load static%} 
+<!-- carga los archivos de la carpeta static -->
+
+<section class="py-16 text-white bg-gradient-to-r from-[#FF2424] to-red-500">
+  <div class="container mx-auto text-center">
+    <h1 class="mb-4 text-4xl font-bold">Bienvenido a <span class="text-black">Nacional de Electricos HHH LIDA</span></h1>
+    <p class="mb-6 text-lg">Tu tienda de confianza en productos eléctricos, iluminación y herramientas.</p>
+    <a href="{% url 'products:product_list' %}" class="px-6 py-3 font-semibold text-black bg-white rounded hover:bg-red-600">
+      Ver Productos
+    </a>
+  </div>
 </section>
+
+
+<section class="py-12 bg-gray-100">
+  <div class="container mx-auto text-center">
+    <h2 class="mb-8 text-3xl font-bold text-gray-800">Categorías destacadas</h2>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3">
+       
+    <a href="{% url 'products:products_by_category' 'iluminacion' %}">
+        <div class="object-cover p-6 bg-white rounded-lg shadow hover:shadow-lg">
+            <div class="w-full h-48 overflow-hidden rounded-lg">
+                    <img src="{% static 'img/iluminacion.jpeg' %}" 
+                         alt="Iluminación" 
+                         class="object-cover w-full h-full">
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800">Iluminación</h3>
+            <p class="mt-2 text-gray-600">Bombillos, lámparas LED y más.</p>
+        </div>
+      </a>
+
+    <a href="{% url 'products:products_by_category' 'cables' %}">    
+      <div class="object-cover p-6 bg-white rounded-lg shadow hover:shadow-lg">
+        <div class="w-full h-48 overflow-hidden rounded-lg">
+                    <img src="{% static 'img/cable.jpg' %}" 
+                         alt="Iluminación" 
+                         class="object-cover w-full h-full">
+                </div>
+        <h3 class="text-xl font-semibold text-gray-800">Cableado</h3>
+        <p class="mt-2 text-gray-600">Cables, conectores y canaletas.</p>
+      </div>
+    </a>
+    
+    <a href="{% url 'products:products_by_category' 'tomacorrientes' %}">
+      <div class="p-6 bg-white rounded-lg shadow hover:shadow-lg">
+        <div class="w-full h-48 overflow-hidden rounded-lg">
+                    <img src="{% static 'img/tomacorriente.avif' %}" 
+                         alt="Iluminación" 
+                         class="object-cover w-full h-full">
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800">Tomacorrientes</h3>
+        <p class="mt-2 text-gray-600">Todo para tus instalaciones.</p>
+      </div>
+      
+    </div>
+   
+    
+    
+    
+  </div>
+</section>
+
+<!-- Sección de información -->
+<section class="py-16 bg-white">
+  <div class="container mx-auto text-center">
+    <h2 class="mb-6 text-3xl font-bold text-gray-800">¿Por qué elegirnos?</h2>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div class="p-6">
+        <h3 class="mb-2 text-xl font-semibold text-blue-700">🔌 Calidad garantizada</h3>
+        <p class="text-gray-600">Solo trabajamos con marcas certificadas y productos duraderos.</p>
+      </div>
+      <div class="p-6">
+        <h3 class="mb-2 text-xl font-semibold text-blue-700">⚡ Entrega rápida</h3>
+        <p class="text-gray-600">Recibe tus productos en menos de 48 horas en todo el país.</p>
+      </div>
+      <div class="p-6">
+        <h3 class="mb-2 text-xl font-semibold text-blue-700">💬 Soporte personalizado</h3>
+        <p class="text-gray-600">Te asesoramos en tus compras y proyectos eléctricos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}
+

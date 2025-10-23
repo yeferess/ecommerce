@@ -24,3 +24,14 @@ def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/product_detail.html', {'product': product})
 
+def product_search(request):
+    query = request.GET.get('q', '') #la q es el identificador desde donde debe tomar el dato
+    products = Product.objects.all()
+
+    if query:
+        products = products.filter(name__icontains=query) #icontains, obvia si es minuscula o mayuscula
+
+    return render(request, 'products/product_search.html', {
+        'products': products,
+        'query': query
+    })

@@ -20,3 +20,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def is_available(self, quantity):
+        #verifica si hay stock para ese pedido
+        return self.stock >= quantity

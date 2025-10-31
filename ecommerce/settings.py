@@ -166,3 +166,6 @@ CART_SESSION_ID = 'cart'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'products:product_list'
 LOGOUT_REDIRECT_URL = 'accounts:login'
+
+#aisla la sesion de admin y los otros usuarios para que no intervenga en el desarrollo
+SESSION_COOKIE_NAME = "ecommerce_sessionid"

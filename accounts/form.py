@@ -19,6 +19,7 @@ class UserRegisterForm(forms.ModelForm):
         if password and password2 and password != password2:
             raise forms.ValidationError("Las contraseñas no coinciden")
         return password2
+    
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(label="Usuario")
     password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)

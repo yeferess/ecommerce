@@ -30,7 +30,7 @@
                         Ver más
                     </a>
 
-                    <form action="{% url 'cart_add' product.id %}" method="post" class="flex-1">
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post" class="flex-1">
                         {% csrf_token %}
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" 

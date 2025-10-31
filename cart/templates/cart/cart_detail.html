@@ -31,7 +31,7 @@
                         </td>
                         <td class="py-4 text-center">${{ item.price }}</td>
                         <td class="py-4 text-center">
-                            <form action="{% url 'cart_add' item.product.id %}" method="post" class="inline-flex items-center justify-center gap-2">
+                            <form action="{% url 'cart:cart_add' item.product.id %}" method="post" class="inline-flex items-center justify-center gap-2">
                                 {% csrf_token %}
                                 <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
                                     class="w-16 text-center border border-gray-300 rounded" />
@@ -40,7 +40,7 @@
                         </td>
                         <td class="py-4 font-semibold text-center">${{ item.total_price }}</td>
                         <td class="py-4 text-center">
-                            <a href="{% url 'cart_remove' item.product.id %}" class="px-3 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600">Eliminar</a>
+                            <a href="{% url 'cart:cart_remove' item.product.id %}" class="px-3 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600">Eliminar</a>
                         </td>
                     </tr>
                 {% endfor %}

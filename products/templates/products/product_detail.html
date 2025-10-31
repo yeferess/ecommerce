@@ -16,10 +16,9 @@
         <p class="mb-4 text-gray-700">{{ product.description }}</p>
         <p class="mb-4 text-2xl font-semibold">${{ product.price }}</p>
         <p class="mb-4 text-sm text-gray-500">Stock: {{ product.stock }}</p>
-        <a href="{% url 'cart_add' product.id %}" class="inline-block px-6 py-2 text-white bg-green-600 rounded hover:bg-green-700">
+        <a href="{% url 'cart:cart_add' product.id %}" class="inline-block px-6 py-2 text-white bg-green-600 rounded hover:bg-green-700">
             Agregar al carrito 🛒
         </a>
-
         
         <a href="{% url 'products:product_list' %}" class="inline-block px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Volver</a>
     </div>

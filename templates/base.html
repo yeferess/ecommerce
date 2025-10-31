@@ -52,7 +52,7 @@
             </form>
 
             <ul class="flex gap-6 list-none" > 
-                <a href="{% url 'cart_detail' %}" class="relative hover:underline"><i  class="relative fa-solid fa-cart-shopping"></i>                    
+                <a href="{% url 'cart:cart_detail' %}" class="relative hover:underline"><i  class="relative fa-solid fa-cart-shopping"></i>                    
                     {% if request.session.cart %} 
                         <span class="absolute px-2 text-sm text-white bg-red-500 rounded-full -top-2 -right-3">
                             {{ request.session.cart|length }}
@@ -98,11 +98,54 @@
     </header>
 
     <main class="container flex-grow py-8 mx-auto">
+
+        <!-- bloque que muestra los mensajes de error -->
+        {% if messages %}
+            
+            <!-- //////////////////////////////////////////////////////////////// -->
+            <div  id="alerta" role="alert" class="rounded-md border border-gray-300 bg-white p-4 shadow-sm mb-10">
+                <div class="flex items-start gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-green-600">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+
+                    <div class="flex-1">
+                        <strong class="font-medium text-gray-900"> Sin Stock !</strong>
+
+                        <p class="mt-0.5 text-sm text-gray-700">
+                            <div class="container mt-4">
+                                {% for message in messages %}
+                                    <div class="p-3 mb-3 text-gray-700 font-bold rounded 
+                                        {% if message.tags == 'error' %}  bg-red-500 {% else %} bg-green-500 {% endif %}">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </p>
+                    </div>
+
+                    <button id="cerrar" class="-m-3 rounded-full p-1.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700" type="button" aria-label="Dismiss alert">
+                    <span class="sr-only">Dismiss popup</span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    </button>
+                </div>
+            </div>
+            
+        {% endif %}
+
+
         {% block content %}{% endblock %}
     </main>
 
     <footer class="py-4 mt-auto text-center text-white bg-gray-800">
         <p>© 2025 Mi Ecommerce</p>
     </footer>
+        <!-- integra css -->
+        <script src="{% static 'js/main.js' %}"></script>
+
 </body>
 </html>

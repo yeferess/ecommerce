@@ -2,6 +2,7 @@ from decimal import Decimal
 from products.models import Product
 
 class Cart:
+
     def __init__(self, request):
         self.session = request.session
         cart = self.session.get('cart')
@@ -14,12 +15,12 @@ class Cart:
         if product_id not in self.cart:
             self.cart[product_id] = {
                 'quantity': 0,
-                'price': str(product.price),  # 👈 aseguramos que el precio se guarde
+                'price': str(product.price),  # aseguramos que el precio se guarde
             }
         if update_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
-            self.cart[product_id]['quantity'] += quantity
+            self.cart[product_id]['quantity'] = quantity
         self.save()
 
     def save(self):

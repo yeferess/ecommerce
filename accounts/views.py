@@ -1,3 +1,4 @@
+import os
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -12,6 +13,7 @@ def register_view(request):
             # Crear usuario
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
+            user.email = form.cleaned_data['email']
             user.save()
 
             # Crear el perfil asociado
@@ -36,7 +38,7 @@ def profile_view(request):
         user.email = request.POST.get('email')
         user.save()
 
-        form = ProfileForm(request.POST, instance=profile)
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             messages.success(request, "Perfil actualizado correctamente ✅")
@@ -46,6 +48,39 @@ def profile_view(request):
 
     return render(request, 'accounts/profile.html', {'form': form})
 
+@login_required
+def delete_profile_image(request):
+   
+    profile = request.user.profile
+
+    
+    image_path = profile.image.path
+
+
+    if os.path.exists(image_path) and 'default.png' not in image_path:
+        os.remove(image_path)
+
+    
+    profile.image = 'profile_pics/default.png'
+    profile.save()
+
+    messages.success(request, "Tu foto de perfil ha sido restablecida a la imagen por defecto ✅")
+    return redirect('accounts:profile')
+
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         form = UserLoginForm(request, data=request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             user = authenticate(username=username, password=password)
+#             if user is not None:
+#                 login(request, user)
+#                 return redirect('products:product_list')
+#     else:
+#         form = UserLoginForm()
+#     return render(request, 'accounts/login.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
@@ -56,10 +91,15 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('products:product_list')
+                # Redirige según el grupo
+                if user.groups.filter(name='Vendedor').exists():
+                    return redirect('seller:dashboard')
+                else:
+                    return redirect('products:product_list')
     else:
         form = UserLoginForm()
     return render(request, 'accounts/login.html', {'form': form})
+
 
 @login_required
 def logout_view(request):

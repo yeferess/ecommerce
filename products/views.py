@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
 from .models import Product, Category
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.db.models import Q
 
 # Create your views here.
 
@@ -24,14 +26,54 @@ def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/product_detail.html', {'product': product})
 
-def product_search(request):
-    query = request.GET.get('q', '') #la q es el identificador desde donde debe tomar el dato
-    products = Product.objects.all()
+def search_products_ajax(request):
+    """AJAX search view - returns JSON for dropdown"""
+    query = request.GET.get('q', '')
+    results = []
 
     if query:
-        products = products.filter(name__icontains=query) #icontains, obvia si es minuscula o mayuscula
+        products = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(category__name__icontains=query)  # si category es FK a Category
+        )[:10]  # limitar para dropdown
 
-    return render(request, 'products/product_search.html', {
+        for p in products:
+            image_url = None
+            try:
+                if p.image:
+                    image_url = request.build_absolute_uri(p.image.url)
+            except Exception:
+                image_url = None
+
+            results.append({
+                'id': p.id,
+                'name': p.name,
+                'description': (p.description or '')[:120],
+                'price': str(p.price),
+                'image': image_url
+            })
+
+    return JsonResponse({'products': results})
+
+def search_results(request):
+    """Full page search results"""
+    query = request.GET.get('q', '')
+    
+    if query:
+        products = Product.objects.filter(
+            Q(name__icontains=query) | 
+            Q(description__icontains=query) |
+            Q(category__name__icontains=query)
+        ).distinct()
+    else:
+        products = Product.objects.none()
+    
+    context = {
         'products': products,
-        'query': query
-    })
+        'query': query,
+        'total': products.count()
+    }
+    return render(request, 'products/search_results.html', context)
+
+   

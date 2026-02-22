@@ -36,22 +36,30 @@
                 </h1>
             </div>    
 
-        <div class="flex items-center justify-around w-[60%] gap-4 ml-4 text-xl text-white ">
-            <form id="searchForm" method="get" action="{% url 'products:product_search' %}" class="flex items-center justify-center mb-6"></form>
-                <div class="w-1/2">
-                    <input class="w-[90%] px-4 py-1 text-black border border-gray-400 rounded-full focus:outline-none"
-                        type="text"
-                        placeholder="Buscar..." 
-                        id="searchInput"
-                        value="{{ request.GET.q }}"                   
-                    />
-                    <button type="submit" class="px-4 py-2 text-white rounded-r hover:bg-red-600">
-                        <i class="fa-solid fa-magnifying-glass"></i>                
-                    </button>
-                </div>
-            </form>
+        <div class="flex items-center justify-around w-[60%] gap-4 ml-4 text-xl text-white ">                     
+                <form id="searchForm" action="{% url 'products:search-results' %}" method="GET" class="flex items-center w-full">
+                    <div class="relative w-1/2 flex flex-col">
+                        <div class="flex">
+                            <input
+                                name="q"
+                                id="searchInput"
+                                class="w-[90%] px-4 py-1 text-black border border-gray-400 rounded-full focus:outline-none"
+                                type="text"
+                                placeholder="Buscar..."
+                                value="{{ query|default:'' }}"
+                                autocomplete="off"/>
+                            <button type="submit" class="px-4 py-2 text-white rounded-r hover:bg-red-600">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                        <div id="searchDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-96 overflow-y-auto z-50"></div>
 
-            <ul class="flex gap-6 list-none" > 
+                    </div>
+                </form>
+
+            
+
+            <ul class="flex gap-6 list-none w-1/2" > 
                 <a href="{% url 'cart:cart_detail' %}" class="relative hover:underline"><i  class="relative fa-solid fa-cart-shopping"></i>                    
                     {% if request.session.cart %} 
                         <span class="absolute px-2 text-sm text-white bg-red-500 rounded-full -top-2 -right-3">
@@ -79,11 +87,10 @@
                     <li><a href="{% url 'accounts:register' %}" class="hover:text-gray-200">Registrarse</a></li>
                 {% endif %}    
 
-            </ul>               
+            </ul> 
         </div>
-                
-            
-        </div>
+
+    </div>
         
 
         <div class="mt-2">
@@ -103,18 +110,20 @@
         {% if messages %}
             
             <!-- //////////////////////////////////////////////////////////////// -->
-            <div  id="alerta" role="alert" class="rounded-md border border-gray-300 bg-white p-4 shadow-sm mb-10">
-                <div class="flex items-start gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-green-600">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+            <div  id="alerta" role="alert" class="rounded-md border border-gray-300 bg-white shadow-sm mb-10">
+                <div class="flex items-start gap-4">                    
 
                     <div class="flex-1">
-                        <strong class="font-medium text-gray-900"> Sin Stock !</strong>
-
                         <p class="mt-0.5 text-sm text-gray-700">
                             <div class="container mt-4">
                                 {% for message in messages %}
+                                    <div class=" flex {% if message.tags != 'error' %} hidden {% else %}  {% endif %}">                                    
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-green-600">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                         </svg>
+                                        <strong class="font-medium text-gray-900"> Sin Stock !</strong>
+                                    </div>
+
                                     <div class="p-3 mb-3 text-gray-700 font-bold rounded 
                                         {% if message.tags == 'error' %}  bg-red-500 {% else %} bg-green-500 {% endif %}">
                                         {{ message }}
@@ -125,7 +134,7 @@
                         </p>
                     </div>
 
-                    <button id="cerrar" class="-m-3 rounded-full p-1.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700" type="button" aria-label="Dismiss alert">
+                    <button id="cerrar" class="-m-3 rounded-full p-3.5 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700" type="button" aria-label="Dismiss alert">
                     <span class="sr-only">Dismiss popup</span>
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -139,13 +148,16 @@
 
 
         {% block content %}{% endblock %}
+
+    
     </main>
 
     <footer class="py-4 mt-auto text-center text-white bg-gray-800">
         <p>© 2025 Mi Ecommerce</p>
     </footer>
-        <!-- integra css -->
-        <script src="{% static 'js/main.js' %}"></script>
 
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
+
+

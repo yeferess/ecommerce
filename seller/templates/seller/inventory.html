@@ -1,0 +1,66 @@
+{% extends 'seller/base_seller.html' %}
+{% block title %}Inventario | Panel Vendedor{% endblock %}
+{% block page_title %}Inventario de Productos{% endblock %}
+
+{% block content %}
+
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h3 class="font-bold text-gray-700">
+            <i class="fa-solid fa-warehouse mr-2 text-[#FF2424]"></i>Todos los productos
+        </h3>
+        <span class="text-sm text-gray-400">{{ products|length }} producto(s)</span>
+    </div>
+    <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-500 uppercase text-xs border-b border-gray-200">
+            <tr>
+                <th class="px-6 py-3 text-left">Producto</th>
+                <th class="px-6 py-3 text-left">Categoría</th>
+                <th class="px-6 py-3 text-left">Precio</th>
+                <th class="px-6 py-3 text-left">Stock</th>
+                <th class="px-6 py-3 text-left">Actualizar stock</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for product in products %}
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4 font-medium text-gray-800">{{ product.name }}</td>
+                <td class="px-6 py-4 text-gray-500">{{ product.category.name }}</td>
+                <td class="px-6 py-4 font-semibold text-gray-800">${{ product.price }}</td>
+                <td class="px-6 py-4">
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold
+                        {% if product.stock == 0 %}bg-red-100 text-red-700
+                        {% elif product.stock <= 5 %}bg-yellow-100 text-yellow-700
+                        {% else %}bg-green-100 text-green-700{% endif %}">
+                        {% if product.stock == 0 %}
+                            <i class="fa-solid fa-circle-xmark mr-1"></i>Sin stock
+                        {% elif product.stock <= 5 %}
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i>{{ product.stock }} uds
+                        {% else %}
+                            <i class="fa-solid fa-circle-check mr-1"></i>{{ product.stock }} uds
+                        {% endif %}
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <form method="POST" action="{% url 'seller:update_stock' product.id %}" class="flex gap-2 items-center">
+                        {% csrf_token %}
+                        <input type="number" name="stock" value="{{ product.stock }}" min="0"
+                            class="border border-gray-300 rounded-lg px-2 py-1 text-xs w-20 focus:outline-none focus:ring-2 focus:ring-red-400">
+                        <button type="submit" class="bg-[#FF2424] text-white px-3 py-1 rounded-lg text-xs hover:bg-red-700 transition">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i>Guardar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="px-6 py-10 text-center text-gray-400">
+                    <i class="fa-solid fa-box-open text-3xl mb-2 block"></i>No hay productos registrados
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

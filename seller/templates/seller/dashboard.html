@@ -1,0 +1,87 @@
+{% extends 'seller/base_seller.html' %}
+{% block title %}Dashboard | Panel Vendedor{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Tarjetas resumen -->
+<div class="grid grid-cols-1 gap-6 mb-8 sm:grid-cols-3">
+
+    <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="flex items-center justify-center w-14 h-14 rounded-full bg-red-100">
+            <i class="text-2xl fa-solid fa-box text-[#FF2424]"></i>
+        </div>
+        <div>
+            <p class="text-3xl font-bold text-gray-800">{{ total_orders }}</p>
+            <p class="text-sm text-gray-500">Total de pedidos</p>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="flex items-center justify-center w-14 h-14 rounded-full bg-yellow-100">
+            <i class="text-2xl fa-solid fa-clock text-yellow-500"></i>
+        </div>
+        <div>
+            <p class="text-3xl font-bold text-gray-800">{{ pending_orders }}</p>
+            <p class="text-sm text-gray-500">Pedidos pendientes</p>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="flex items-center justify-center w-14 h-14 rounded-full bg-red-100">
+            <i class="text-2xl fa-solid fa-triangle-exclamation text-red-500"></i>
+        </div>
+        <div>
+            <p class="text-3xl font-bold text-gray-800">{{ low_stock }}</p>
+            <p class="text-sm text-gray-500">Productos con stock bajo</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Últimos pedidos -->
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <h3 class="font-bold text-gray-700">
+            <i class="fa-solid fa-clock-rotate-left mr-2 text-[#FF2424]"></i>Últimos 5 pedidos
+        </h3>
+        <a href="{% url 'seller:order_list' %}" class="text-sm text-[#FF2424] hover:underline font-medium">Ver todos →</a>
+    </div>
+    <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+            <tr>
+                <th class="px-6 py-3 text-left">Pedido</th>
+                <th class="px-6 py-3 text-left">Cliente</th>
+                <th class="px-6 py-3 text-left">Fecha</th>
+                <th class="px-6 py-3 text-left">Estado</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for order in recent_orders %}
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4 font-medium text-gray-800">#{{ order.id }}</td>
+                <td class="px-6 py-4 text-gray-600">{{ order.user.username }}</td>
+                <td class="px-6 py-4 text-gray-500">{{ order.date_order|date:"d/m/Y" }}</td>
+                <td class="px-6 py-4">
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold
+                        {% if order.status == 'pending' %}bg-yellow-100 text-yellow-700
+                        {% elif order.status == 'paid' %}bg-blue-100 text-blue-700
+                        {% elif order.status == 'shipped' %}bg-purple-100 text-purple-700
+                        {% elif order.status == 'completed' %}bg-green-100 text-green-700
+                        {% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ order.get_status_display }}
+                    </span>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="px-6 py-6 text-center text-gray-400">
+                    <i class="fa-solid fa-inbox text-2xl mb-2 block"></i>Sin pedidos registrados
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

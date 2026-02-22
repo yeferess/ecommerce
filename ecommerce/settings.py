@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',    
+    'django.contrib.humanize',
+
   
     # apps del proyecto
     'products',
@@ -54,6 +56,8 @@ INSTALLED_APPS = [
     'orders',
     'pages',
     'accounts',
+    'seller',
+
 ]
 
 MIDDLEWARE = [

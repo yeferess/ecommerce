@@ -27,10 +27,10 @@
                 <div class="flex items-center justify-between mt-auto space-x-2">
                     <a href="{% url 'products:product_detail' product.pk %}" 
                        class="flex-1 px-4 py-2 text-center text-white transition bg-red-600 rounded hover:bg-red-700">
-                        Ver más
+                        Ver detalles
                     </a>
 
-                    <form action="{% url 'cart:cart_add' product.id %}" method="post" class="flex-1">
+                    <form action="{% url 'cart:cart_add' product.pk %}" method="post" class="flex-1">
                         {% csrf_token %}
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" 

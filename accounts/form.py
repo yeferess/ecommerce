@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Profile
 
 class UserRegisterForm(forms.ModelForm):
+    email = forms.EmailField(label="Correo electrónico", required=True)
     password = forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
     phone = forms.CharField(label='Teléfono', max_length=10, required=False)
@@ -28,8 +29,15 @@ class UserLoginForm(AuthenticationForm):
 class ProfileForm(forms.ModelForm):  #para editar los datos de mi perfil
     class Meta:
         model = Profile
-        fields = ['phone', 'address']
+        fields = ['phone', 'address', 'image']
         labels = {
             'phone': 'Teléfono',
             'address': 'Dirección',
         }
+        widgets = {
+            'image': forms.FileInput(attrs={
+                'class': 'border rounded-lg p-2 w-full text-sm text-gray-700',
+                'accept': 'image/*',
+        }),
+}
+

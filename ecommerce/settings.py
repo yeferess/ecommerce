@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',    
     'django.contrib.humanize',
+    'django_extensions',
 
   
     # apps del proyecto
@@ -173,3 +174,4 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 
 #aisla la sesion de admin y los otros usuarios para que no intervenga en el desarrollo
 SESSION_COOKIE_NAME = "ecommerce_sessionid"
+CSRF_COOKIE_NAME = "ecommerce_csrftoken"

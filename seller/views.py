@@ -19,14 +19,16 @@ seller_required = user_passes_test(is_seller, login_url='accounts:login')
 def dashboard(request):
     total_orders = Order.objects.count()
     pending_orders = Order.objects.filter(status='pending').count()
-    low_stock = Product.objects.filter(stock__lte=5).count()
-    recent_orders = Order.objects.order_by('-date_order')[:5]
+    low_stock = Product.objects.filter(stock__lte=5).count() #lte Less than or Equal 
+    recent_orders = Order.objects.order_by('-date_order')[:10] # el -date_order significa el mas reciente primero
+    completed_orders = Order.objects.filter(status='completed').count()
 
     context = {
         'total_orders': total_orders,
         'pending_orders': pending_orders,
         'low_stock': low_stock,
         'recent_orders': recent_orders,
+        'completed_orders': completed_orders
     }
     return render(request, 'seller/dashboard.html', context)
 
@@ -55,15 +57,19 @@ def order_list(request):
 @seller_required
 def update_order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    if request.method == 'POST':
-        new_status = request.POST.get('status')
-        valid = [s[0] for s in Order.STATUS_CHOICES]
-        if new_status in valid:
-            order.status = new_status
-            order.save()
-            messages.success(request, f'Estado del pedido #{order.id} actualizado.')
-        else:
-            messages.error(request, 'Estado inválido.')
+    new_status = request.POST.get('status')
+    valid = [s[0] for s in Order.STATUS_CHOICES]
+    if new_status in valid:
+        order.status = new_status
+        order.save()
+        messages.success(request, f'Estado del pedido #{order.id} actualizado.')
+    else:
+        messages.error(request, 'Estado inválido.')
+    
+    # Si viene del detalle, regresa al detalle
+    referer = request.META.get('HTTP_REFERER', '')  #Obtiene la URL desde donde vino el usuario, pag anterior
+    if 'orders/' in referer and str(order_id) in referer:
+        return redirect('seller:order_detail', order_id=order.id)
     return redirect('seller:order_list')
 
 
@@ -79,10 +85,7 @@ def inventory(request):
 @seller_required
 def update_stock(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    new_stock = request.POST.get('stock')
-    
-    
-    
+    new_stock = request.POST.get('stock')   
     try:
         stock_value = int(new_stock)
         if stock_value < 0: 
@@ -95,3 +98,22 @@ def update_stock(request, product_id):
         messages.error(request, 'Valor de stock inválido.')
     return redirect('seller:inventory')
 
+@login_required
+@seller_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    items = order.items.select_related('product').all()
+    context = {
+        'order': order,
+        'items': items,
+    }
+    return render(request, 'seller/order_detail.html', context)
+
+@login_required
+@seller_required
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    context = {
+        'product': product       
+    }
+    return render(request, 'seller/product_detail.html', context)

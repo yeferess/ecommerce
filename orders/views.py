@@ -5,6 +5,7 @@ from django.db import transaction
 from .models import Order, OrderItem, Invoice
 from cart.cart import Cart
 
+
 @login_required # solo usuarios logeados 
 # @transaction.atomic
 def create_order(request):
@@ -21,7 +22,7 @@ def create_order(request):
         order = Order.objects.create(
             user=request.user,
             discount=cart.get_discount()[0],                # descuento en dinero
-            total=cart.get_total_after_discount()           # total con descuento
+         # total con descuento
         )
 
 
@@ -72,3 +73,4 @@ def order_created(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     invoice = getattr(order, 'invoice', None)  #related_name y no genera errores si no existe la factura
     return render(request, 'orders/order_created.html', {'order': order, 'invoice': invoice})
+

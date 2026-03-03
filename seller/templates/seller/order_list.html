@@ -38,7 +38,9 @@
         <tbody class="divide-y divide-gray-100">
             {% for order in orders %}
             <tr class="hover:bg-gray-50 transition">
-                <td class="px-6 py-4 font-bold text-gray-800">#{{ order.id }}</td>
+                <td class="px-6 py-4 font-bold text-[#FF2424] hover:underline">
+                    <a href="{% url 'seller:order_detail' order.id %}">#{{ order.id }}</a>
+                </td>
                 <td class="px-6 py-4 text-gray-600">
                     <i class="fa-solid fa-user text-gray-400 mr-1"></i>{{ order.user.username }}
                 </td>

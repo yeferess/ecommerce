@@ -31,7 +31,7 @@
             <i class="text-2xl text-yellow-300 fa-solid fa-plug"></i>
             <div>
                 <p class="text-xs text-red-200">Panel Vendedor</p>
-                <p class="text-sm font-bold leading-tight">Electricos Shop</p>
+                <p class="text-sm font-bold leading-tight">Nacional de Electricos</p>
             </div>
         </div>
 
@@ -39,7 +39,8 @@
         <nav class="flex flex-col gap-1 px-3 py-6 flex-1">
             <a href="{% url 'seller:dashboard' %}"
                class="flex items-center gap-3 px-4 py-3 rounded-lg transition hover:bg-gray-700 
-               {% if request.resolver_match.url_name == 'dashboard' %}bg-gray-700 border-l-4 border-red-500{% endif %}">
+               #marca la pantalla en la que estamos
+               {% if request.resolver_match.url_name == 'dashboard' %}bg-gray-700 border-l-4 border-red-500{% endif %}"> 
                 <i class="w-5 text-center fa-solid fa-chart-line text-yellow-300"></i>
                 <span>Dashboard</span>
             </a>
@@ -63,8 +64,8 @@
             <p class="text-sm font-semibold text-white mb-3">
                 <i class="fa-solid fa-user mr-1 text-yellow-300"></i> {{ request.user.username }}
             </p>
-            <a href="{% url 'home' %}" class="flex items-center gap-2 text-xs text-gray-400 hover:text-white transition">
-                <i class="fa-solid fa-arrow-left"></i> Volver a la tienda
+            <a href="{% url 'accounts:logout' %}" class="flex items-center gap-2 text-xs text-gray-400 hover:text-white transition">
+                <i class="fa-solid fa-arrow-left"></i> Salir
             </a>
         </div>
     </aside>

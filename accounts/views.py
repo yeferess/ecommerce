@@ -32,55 +32,63 @@ def register_view(request):
 @login_required
 def profile_view(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
+    # print("usuario:", request.user)
+    # print("profile id:", profile.id)
+    # print("phone en BD:", profile.phone)
 
     if request.method == 'POST':
-        user = request.user
-        user.email = request.POST.get('email')
-        user.save()
+                
+        if 'guardar' in request.POST:
+            #SI LLEGA DEL BOTTON GUARDAR CAMBIOS
+            user = request.user
 
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Perfil actualizado correctamente ✅")
+            userEmail = request.POST.get('email')       
+            if userEmail:            
+                user.email = userEmail           
+            user.save()     
+            oldPhone = profile.phone
+            oldAddress = profile.address       
+
+            form = ProfileForm(request.POST, request.FILES, instance=profile)
+
+            if form.is_valid():
+                # print("formulario válido")
+                profilePhone = request.POST.get('phone')
+                profileAddress = request.POST.get('address')                
+              
+
+                profile = form.save(commit=False) #sobreescribe los cambios que llegaron en form asi un campo este vacio
+                if not profilePhone: 
+                    profile.phone = oldPhone
+                if not profileAddress:            
+                    profile.address = oldAddress          
+                profile.save()
+
+                messages.success(request, "Perfil actualizado correctamente ✅")
+                return redirect('accounts:profile')
+            else:
+                # print("formulario inválido")
+                # print(form.errors) 
+                messages.error(request, "Datos no validos")
+                return redirect('accounts:profile')
+                
+
+        if 'eliminar' in request.POST:
+            profile = request.user.profile    
+            image_path = profile.image.path
+
+            if os.path.exists(image_path) and 'default.png' not in image_path:
+                os.remove(image_path)
+            
+            profile.image = 'profile_pics/default.png'
+            profile.save()
+
+            messages.success(request, "Tu foto de perfil ha sido restablecida a la imagen por defecto ✅")
             return redirect('accounts:profile')
     else:
         form = ProfileForm(instance=profile)
-
     return render(request, 'accounts/profile.html', {'form': form})
 
-@login_required
-def delete_profile_image(request):
-   
-    profile = request.user.profile
-
-    
-    image_path = profile.image.path
-
-
-    if os.path.exists(image_path) and 'default.png' not in image_path:
-        os.remove(image_path)
-
-    
-    profile.image = 'profile_pics/default.png'
-    profile.save()
-
-    messages.success(request, "Tu foto de perfil ha sido restablecida a la imagen por defecto ✅")
-    return redirect('accounts:profile')
-
-
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = UserLoginForm(request, data=request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             user = authenticate(username=username, password=password)
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect('products:product_list')
-#     else:
-#         form = UserLoginForm()
-#     return render(request, 'accounts/login.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':

@@ -56,9 +56,14 @@
                 <i class="w-5 text-center fa-solid fa-warehouse text-yellow-300"></i>
                 <span>Inventario</span>
             </a>
+            <a href="{% url 'seller:sales' %}"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg transition hover:bg-gray-700
+                {% if request.resolver_match.url_name == 'sales' %}bg-gray-700 border-l-4 border-red-500{% endif %}">
+                 <i class="w-5 text-center fa-solid fa-dollar-sign text-yellow-300"></i>
+                 <span>Ventas</span>
+            </a>
         </nav>
 
-        <!-- Usuario y salida -->
         <div class="px-4 py-4 border-t border-gray-700">
             <p class="text-xs text-gray-400 mb-2">Conectado como</p>
             <p class="text-sm font-semibold text-white mb-3">
@@ -70,16 +75,16 @@
         </div>
     </aside>
 
-    <!-- Contenido principal -->
+    
     <div class="flex flex-col flex-1">
 
-        <!-- Topbar -->
+        
         <header class="flex items-center justify-between px-8 py-4 bg-white shadow-sm border-b border-gray-200">
             <h2 class="text-lg font-bold text-gray-700">{% block page_title %}Panel{% endblock %}</h2>
             <span class="text-sm text-gray-500">{{ "now"|date:"l, d \d\e F \d\e Y" }}</span>
         </header>
 
-        <!-- Mensajes -->
+        
         <div class="px-8 pt-4">
             {% if messages %}
                 {% for message in messages %}
@@ -93,13 +98,13 @@
             {% endif %}
         </div>
 
-        <!-- Bloque de contenido -->
+        
         <main class="flex-1 px-8 py-6">
             {% block content %}{% endblock %}
         </main>
 
         <footer class="py-3 text-xs text-center text-gray-400 border-t border-gray-200">
-            © 2025 Electricos Shop — Panel de Vendedor
+            © 2026 Nacional de Eléctricos — Panel de Vendedor
         </footer>
     </div>
 

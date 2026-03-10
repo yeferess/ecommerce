@@ -15,8 +15,7 @@ def create_order(request):
     if request.method == "GET":
         return render(request, "orders/order_create.html", {"cart": cart})
 
-    if request.method == 'POST':        
-
+    if request.method == 'POST': 
         # Crea los items a partir del carrito
 
         order = Order.objects.create(
@@ -24,7 +23,6 @@ def create_order(request):
             discount=cart.get_discount()[0],                # descuento en dinero
          # total con descuento
         )
-
 
         for item in cart:             
             #order=order,
@@ -74,3 +72,23 @@ def order_created(request, order_id):
     invoice = getattr(order, 'invoice', None)  #related_name y no genera errores si no existe la factura
     return render(request, 'orders/order_created.html', {'order': order, 'invoice': invoice})
 
+
+@login_required
+def order_cancel(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    new_status = request.POST.get('status')
+    valid = [s[0] for s in Order.STATUS_CHOICES]
+    if new_status in valid:
+        #vuelve a sumar Stock
+        if new_status == 'cancelled' and order.status != 'cancelled':
+            for item in order.items.all():
+                item.product.stock += item.quantity
+                item.product.save()
+
+        order.status = new_status
+        order.save()
+        messages.success(request, f'pedido #{order.id} Cancelado.')
+    else:
+        messages.error(request, 'Estado inválido.')   
+    
+    return redirect('orders:profile_orders')

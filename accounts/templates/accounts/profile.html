@@ -6,13 +6,13 @@
 <div class="max-w-lg p-8 mx-auto mt-10 bg-white rounded-lg shadow">
     <h2 class="mb-6 text-2xl font-bold text-center">👤 Mi Perfil</h2>
 
-    {% if messages %}
+    <!-- {% if messages %}
         {% for message in messages %}
             <div class="p-3 mb-4 text-center text-green-700 bg-green-100 rounded">
                 {{ message }}
             </div>
         {% endfor %}
-    {% endif %}
+    {% endif %} -->
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -23,17 +23,17 @@
             {% else %}
                 <img src="{{ MEDIA_URL }}profile_pics/default.png" alt="Foto de perfil" class="w-24 h-24 mb-2 rounded-full">
             {% endif %}
-            <label class="block font-semibold">Cambiar foto:</label>
-            {{ form.image }}
 
-            
-            <form method="post" action="{% url 'accounts:delete_profile_image' %}">
-                {% csrf_token %}
-                <button type="submit" 
-                    class="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
+            <div class="flex gap-4 items-center h-10">
+                <label class="block font-semibold w-2/3">Cambiar foto:</label>
+                {{ form.image }}                 
+                <button type="submit" name="eliminar" class="bg-red-500 text-white rounded hover:bg-red-600
+                        transition">
                         🗑️ Borrar foto
                 </button>
-            </form>
+                
+            </div>  
+            
         </div>
 
 
@@ -58,7 +58,7 @@
             {{ form.address }}
         </div>
 
-        <button type="submit" class="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
+        <button type="submit" name="guardar" class="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
             Guardar cambios
         </button>
     </form>

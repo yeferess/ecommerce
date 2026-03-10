@@ -18,10 +18,8 @@ class UserRegisterForm(forms.ModelForm):
         'placeholder': '3001234567'
     }))
 
-
     address = forms.CharField(label='Dirección', max_length=200, required=False, widget=forms.TextInput(attrs=
                                                                                     {'class': INPUT_CLASS}))
-
     class Meta:
         model = User
         fields = ['username', 'email']

@@ -4,8 +4,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from orders.models import Order
 from products.models import Product
+from products.form import ProductForm
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
+from datetime import date
 
 def is_seller(user):
     # return user.groups.filter(name='Vendedor').exists()
@@ -66,7 +68,7 @@ def update_order_status(request, order_id):
     else:
         messages.error(request, 'Estado inválido.')
     
-    # Si viene del detalle, regresa al detalle
+    # Si viene del detalle, regresa al detalle, sino va al order_list
     referer = request.META.get('HTTP_REFERER', '')  #Obtiene la URL desde donde vino el usuario, pag anterior
     if 'orders/' in referer and str(order_id) in referer:
         return redirect('seller:order_detail', order_id=order.id)
@@ -117,3 +119,51 @@ def product_detail(request, product_id):
         'product': product       
     }
     return render(request, 'seller/product_detail.html', context)
+
+@login_required
+@seller_required
+def add_product(request):
+    
+    if request.method == 'POST':      
+
+        form = ProductForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            product = form.save(commit=False)            
+            product.save()
+            messages.success(request, "Producto creado exitosamente.")
+            return redirect('seller:inventory')
+    else:
+        form = ProductForm()
+        messages.error(request, "Todos todos los campos del formulario son obligatorios!.")
+    return render(request, 'seller/add_product.html', {'form': form})        
+
+@login_required
+@seller_required
+def sales(request):
+    from datetime import date
+    
+    date_start = request.GET.get('date_start', '')
+    date_end = request.GET.get('date_end', '')    
+    orders = Order.objects.all().order_by('-date_order')
+    
+    if date_start and date_end:
+        orders = orders.filter(date_order__gte=date_start).filter(date_order__lte=date_end).filter(status='completed')
+    else:
+        orders = orders.filter(date_order__date=date.today()).filter(status='completed')
+
+    total_sales = sum(order.total() for order in orders)
+    total_orders = orders.count()
+
+    paginator = Paginator(orders, 20)
+    page_number = request.GET.get('page')
+    orders = paginator.get_page(page_number)
+
+    context = {
+        'orders': orders,
+        'total_sales': total_sales,
+        'total_orders': total_orders,
+        'date_start': date_start,
+        'date_end': date_end,
+    }
+    return render(request, 'seller/sales.html', context)
